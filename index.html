@@ -1,0 +1,159 @@
+
+<!doctype html>
+<html lang="en"></html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WebAR</title>
+
+        <!-- A-Frameとar.jsライブラリ -->
+        <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+        <script src="./js/html2canvas.min.js"></script>
+    </head>
+    <body style="margin: 0; overflow: hidden;">
+
+        <!-- a-sceneの中には、ARコンテンツを記述します。 -->
+        <!-- Webカメラが起動します。 -->
+        <a-scene
+            vr-mode-ui="enabled: false;"
+            loading-screen="enabled: false;"
+            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+            embedded
+            gesture-detector>
+            <!-- オブジェクトファイル(glb)を読み込む -->
+            <a-assets>
+                <a-asset-item id="MD8" src="./assets/MD8.glb"></a-asset-item>
+            </a-assets>
+            <a-assets>
+                <a-asset-item id="MZ_loger" src="./assets/MZ_loger.glb"></a-asset-item>
+            </a-assets>
+            <a-assets>
+                <a-asset-item id="MZ_receiver" src="./assets/MZ_receiver.glb"></a-asset-item>
+            </a-assets>
+
+            <!-- MD8用マーカーを登録（「A」マーカー） -->
+            <!-- a-markerの中には、ARマーカーを読み取った際のコンテンツを記述します。 -->
+            <!-- 下記urlにあるpattファイル(marker.patt)＝ARマーカーです。ARマーカーを変更する場合は、pattファイルを更新します。 -->
+            <a-marker
+                markerhandler = "arobject:#ar-objects"
+                type="pattern"
+                preset="custom"
+                url="assets/A.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;">   
+                
+                <!-- 3Dモデルを呼び出す -->
+                <!-- <a-entity gltf-model="#MD8" position="0 0 -0.5" rotation="-90 0 0" Scale="5 5 5"></a-entity> -->
+                <a-entity gltf-model="#MD8" position="0 1 0" rotation="-90 0 0" Scale="15 15 15"></a-entity>
+
+                <!-- ここでのa-entityはテキスト画像を表します。-->
+                <!-- a-entityはテキスト内容を画像として表示しています。日本語も扱えます。-->
+                <!-- a-textというテキスト専用のARもありますが、日本語が表現できません。 -->
+                <!-- positionやrotationを調整して表示位置を変更します。 -->
+                <!-- <a-entity 
+                    mb-text 
+                    position="2 0 -0.3" 
+                    rotation="-90 0 0" 
+                    data-text="MD8000">
+                </a-entity> -->
+    
+                <!-- ここでのa-entityはライン（線）を表します。 -->
+                <!-- start(X Z? Y)とendを調整して表示位置を変更します。 -->
+
+                <!-- <a-entity  
+                    id="line"
+                    line="start: 1.2 0 1; end: 2.2 0 -1.2; color: red">
+                </a-entity> -->
+
+                <!-- <a-entity  
+                    id="line"
+                    line="start: 2.0 0 1.4; end: -10.2 0 0.2; color: red">
+                </a-entity> -->
+            </a-marker>
+
+            <!-- MZ_loger用マーカーを登録（「B」マーカー） -->
+            <!-- a-markerの中には、ARマーカーを読み取った際のコンテンツを記述します。 -->
+            <!-- 下記urlにあるpattファイル(marker.patt)＝ARマーカーです。ARマーカーを変更する場合は、pattファイルを更新します。 -->
+            <a-marker
+                markerhandler = "arobject:#ar-objects"
+                type="pattern"
+                preset="custom"
+                url="assets/B.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;">           
+               
+                <!-- 3Dモデルを呼び出す -->
+                <a-entity gltf-model="#MZ_loger" position="0 1 0" rotation="-90 0 0" scale="15 15 15"></a-entity>
+
+                <!-- <a-entity 
+                mb-text 
+                position="2 0 -0.3" 
+                rotation="-90 0 0" 
+                data-text="MZ_loger">
+                </a-entity> -->
+                
+            </a-marker>
+
+             <!-- MZ_receiver用マーカーを登録（「C」マーカー） -->
+            <!-- a-markerの中には、ARマーカーを読み取った際のコンテンツを記述します。 -->
+            <!-- 下記urlにあるpattファイル(marker.patt)＝ARマーカーです。ARマーカーを変更する場合は、pattファイルを更新します。 -->
+            <a-marker
+                markerhandler = "arobject:#ar-objects"
+                type="pattern"
+                preset="custom"
+                url="assets/C.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;">           
+               
+                <!-- 3Dモデルを呼び出す -->
+                <a-entity gltf-model="#MZ_receiver" position="0 1 0" rotation="-90 0 0" scale="15 15 15"></a-entity>
+                
+                <!-- <a-entity 
+                mb-text 
+                position="2 0 -0.3" 
+                rotation="-90 0 0" 
+                data-text="MZ_receiver">
+                </a-entity> -->
+            </a-marker>
+
+            <!-- カメラが生成されます。ユーザーの視点となります。 -->
+            <!-- これを記載しないと、マーカーが読み取れません。 -->
+            <a-entity camera></a-entity>
+        </a-scene>
+
+    </body>
+
+    <!-- a-entityのテキストを画像に変換します。 -->
+    <script>
+        function aframeMutlByte(){
+            document.querySelectorAll('[mb-text]').forEach(mb_text=>{
+                console.log(mb_text.dataset.text)
+                const text  =mb_text.dataset.text
+                const text_cnt = text.length
+                const width = text_cnt*0.9
+                const height= 1.6
+                let cvs = document.createElement('canvas')
+                let ctx = cvs.getContext('2d')
+                cvs.width = width*100
+                cvs.height = height*100
+                ctx.fillStyle = "rgb(255, 255, 255)"
+                ctx.fillRect(0, 0, cvs.width, cvs.height)
+                ctx.fillStyle = "rgb(0, 0, 0)"
+                ctx.font = '100pt Arial'
+                ctx.fillText(text,0,125)
+        
+                const base64 = cvs.toDataURL("image/png")
+                mb_text.innerHTML=`<a-image scale="${(width)/5} ${height/5} 1" src="${base64}"></a-image>`
+            })
+
+        }
+        aframeMutlByte()
+    </script>
+    
+</html>
